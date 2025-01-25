@@ -50,25 +50,25 @@ exports.handler = async function (event, context) {
   // console.log('response.headers.raw() => ', response.headers.raw());
   // console.log('responseHeadersObject => ', responseHeadersObject);
 
-  // let responseBody;
-  // const contentType = response.headers.get('content-type');
-  // if (contentType.includes('text') ||
-  //   contentType.includes('javascript') ||
-  //   contentType.includes('json') ||
-  //   contentType.includes('xml')) {
-  //   responseBody = await response.text();
-  // } else {
-  //   const buffer = await response.buffer();
-  //   responseBody = buffer.toString('base64');
-  // }
+  let responseBody;
+  const contentType = response.headers.get('content-type');
+  if (contentType.includes('text') ||
+    contentType.includes('javascript') ||
+    contentType.includes('json') ||
+    contentType.includes('xml')) {
+    responseBody = await response.text();
+  } else {
+    const buffer = await response.buffer();
+    responseBody = buffer.toString('base64');
+  }
 
   return {
     statusCode: response.status,
     headers: response.headers.raw(),
-    body: response.body,
-    // isBase64Encoded: !contentType.includes('text') &&
-    //   !contentType.includes('javascript') &&
-    //   !contentType.includes('json') &&
-    //   !contentType.includes('xml')
+    body: responseBody,
+    isBase64Encoded: !contentType.includes('text') &&
+      !contentType.includes('javascript') &&
+      !contentType.includes('json') &&
+      !contentType.includes('xml')
   }
 }

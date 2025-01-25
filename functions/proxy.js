@@ -44,6 +44,8 @@ exports.handler = async function (event, context) {
     responseHeadersObject[headerName] = headerContent;
   });
 
+  console.log('responseHeadersObject => ', responseHeadersObject);
+
   let responseBody;
   const contentType = response.headers.get('content-type');
   if (contentType.includes('text') ||

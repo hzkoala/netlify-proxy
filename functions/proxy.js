@@ -56,9 +56,5 @@ exports.handler = async function (event, context) {
     statusCode: response.status,
     headers: response.headers,
     body: body,
-    isBase64Encoded: !contentType.includes('text') &&
-      !contentType.includes('javascript') &&
-      !contentType.includes('json') &&
-      !contentType.includes('xml')
   }
 }

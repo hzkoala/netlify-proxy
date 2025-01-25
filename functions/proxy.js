@@ -43,6 +43,7 @@ exports.handler = async function (event, context) {
   response.headers.forEach((headerContent, headerName) => {
     responseHeadersObject[headerName] = headerContent;
   });
+  responseHeadersObject['Content-Encoding'] = 'identity';
 
   console.log('responseHeadersObject => ', responseHeadersObject);
 

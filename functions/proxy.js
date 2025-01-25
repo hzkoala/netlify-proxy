@@ -38,10 +38,27 @@ exports.handler = async function (event, context) {
     fetchOptions.body = event.body;
   }
 
-  const response = await fetch(originUrl, fetchOptions)
+  const response = await fetch(originUrl, fetchOptions);
+  let body;
+  const contentType = response.headers.get('content-type') || '';
+
+  if (contentType.includes('text') ||
+    contentType.includes('javascript') ||
+    contentType.includes('json') ||
+    contentType.includes('xml')) {
+    body = await response.text();
+  } else {
+    const buffer = await response.buffer();
+    body = buffer.toString('base64');
+  }
+
   return {
     statusCode: response.status,
     headers: response.headers,
-    body: response.body,
+    body: body,
+    isBase64Encoded: !contentType.includes('text') &&
+      !contentType.includes('javascript') &&
+      !contentType.includes('json') &&
+      !contentType.includes('xml')
   }
 }

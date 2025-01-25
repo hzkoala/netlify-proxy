@@ -7,8 +7,6 @@ const domainMap = {
 }
 
 exports.handler = async function (event, context) {
-  console.log(event);
-
   const proxyUrl = new URL(event.rawUrl);
   const proxyDomain = proxyUrl.hostname;
   const proxyPath = proxyUrl.pathname;
@@ -19,6 +17,7 @@ exports.handler = async function (event, context) {
 
   // originResponse
   const originHeaders = new Headers();
+  // console.log('event.headers => ', event.headers);
   Object.entries(event.headers).forEach(([headerName, headerContent]) => {
     if (headerName.includes('CF-') || headerName == 'X-Forward-For') return;
     originHeaders.append(headerName, headerContent);
@@ -39,22 +38,37 @@ exports.handler = async function (event, context) {
   }
 
   const response = await fetch(originUrl, fetchOptions);
-  let body;
-  const contentType = response.headers.get('content-type') || '';
 
-  if (contentType.includes('text') ||
-    contentType.includes('javascript') ||
-    contentType.includes('json') ||
-    contentType.includes('xml')) {
-    body = await response.text();
-  } else {
-    const buffer = await response.buffer();
-    body = buffer.toString('base64');
-  }
+  // let responseHeadersObject = {};
+  // Object.entries(response.headers.raw()).forEach(([headerName, headerContent]) => {
+  //   console.log('headerName => ', headerName);
+  //   console.log('headerContent => ', headerContent);
+  //   responseHeadersObject[headerName] = headerContent;
+  // });
+
+  // console.log('response.headers => ', response.headers);
+  // console.log('response.headers.raw() => ', response.headers.raw());
+  // console.log('responseHeadersObject => ', responseHeadersObject);
+
+  // let responseBody;
+  // const contentType = response.headers.get('content-type');
+  // if (contentType.includes('text') ||
+  //   contentType.includes('javascript') ||
+  //   contentType.includes('json') ||
+  //   contentType.includes('xml')) {
+  //   responseBody = await response.text();
+  // } else {
+  //   const buffer = await response.buffer();
+  //   responseBody = buffer.toString('base64');
+  // }
 
   return {
     statusCode: response.status,
-    headers: response.headers,
-    body: body,
+    headers: response.headers.raw(),
+    body: response.body,
+    // isBase64Encoded: !contentType.includes('text') &&
+    //   !contentType.includes('javascript') &&
+    //   !contentType.includes('json') &&
+    //   !contentType.includes('xml')
   }
 }

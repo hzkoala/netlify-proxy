@@ -40,7 +40,7 @@ exports.handler = async function (event, context) {
   const response = await fetch(originUrl, fetchOptions);
 
   let responseHeadersObject = {};
-  Object.entries(response.headers.raw()).forEach(([headerName, headerContent]) => {
+  response.headers.forEach(([headerName, headerContent]) => {
     responseHeadersObject[headerName] = headerContent;
   });
 

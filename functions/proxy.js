@@ -39,10 +39,19 @@ exports.handler = async function (event, context) {
   }
 
   const response = await fetch(originUrl, fetchOptions)
+  let responseBody;
+  if (response.headers.get("content-type").includes("text") ||
+    response.headers.get("content-type").includes("javascript") ||
+    response.headers.get("content-type").includes("json") ||
+    response.headers.get("content-type").includes("xml")) {
+    responseBody = await response.text();
+  } else {
+    responseBody = await response.buffer();
+  }
 
   return {
     statusCode: response.status,
     headers: response.headers,
-    body: await response.text(),
+    body: responseBody,
   }
 }

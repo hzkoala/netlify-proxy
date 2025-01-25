@@ -1,0 +1,11 @@
+[build]
+  functions = "functions"
+
+[dev]
+  port = 8080
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/proxy"
+  status = 200
+  force = true 

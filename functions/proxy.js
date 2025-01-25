@@ -7,6 +7,8 @@ const domainMap = {
 }
 
 exports.handler = async function (event, context) {
+  console.log(event);
+
   const proxyUrl = new URL(event.rawUrl);
   const proxyDomain = proxyUrl.hostname;
   const proxyPath = proxyUrl.pathname;

@@ -39,16 +39,10 @@ exports.handler = async function (event, context) {
 
   const response = await fetch(originUrl, fetchOptions);
 
-  // let responseHeadersObject = {};
-  // Object.entries(response.headers.raw()).forEach(([headerName, headerContent]) => {
-  //   console.log('headerName => ', headerName);
-  //   console.log('headerContent => ', headerContent);
-  //   responseHeadersObject[headerName] = headerContent;
-  // });
-
-  // console.log('response.headers => ', response.headers);
-  // console.log('response.headers.raw() => ', response.headers.raw());
-  // console.log('responseHeadersObject => ', responseHeadersObject);
+  let responseHeadersObject = {};
+  Object.entries(response.headers.raw()).forEach(([headerName, headerContent]) => {
+    responseHeadersObject[headerName] = headerContent;
+  });
 
   let responseBody;
   const contentType = response.headers.get('content-type');
@@ -64,7 +58,7 @@ exports.handler = async function (event, context) {
 
   return {
     statusCode: response.status,
-    headers: response.headers.raw(),
+    headers: responseHeadersObject,
     body: responseBody,
     isBase64Encoded: !contentType.includes('text') &&
       !contentType.includes('javascript') &&
